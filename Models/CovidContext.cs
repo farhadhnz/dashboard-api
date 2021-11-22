@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCode;
+using Microsoft.EntityFrameworkCore;
 
 namespace dashboard_api.Models
 {
@@ -9,6 +9,6 @@ namespace dashboard_api.Models
         {
         }
 
-        public DbSet<CovidItem> CovidItems { get; set; }
+        public DbSet<CovidItem> CovidItems { get; set; } = null!;
     }
 }
