@@ -51,6 +51,17 @@ namespace dashboard_api.Controllers
             return covidItems;
         }
 
+        [HttpGet("latest")]
+        public async Task<ActionResult<IEnumerable<CovidItem>>> GetLatestLocationData()
+        {
+            var covidItems = await _context.CovidItems
+                            .GroupBy(a => a.Location)
+                            .Select(g => g.OrderByDescending(x => x.Date).First())
+                            .ToListAsync();
+
+            return covidItems;
+        }
+
         // PUT: api/CovidItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
