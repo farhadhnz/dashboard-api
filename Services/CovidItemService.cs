@@ -42,6 +42,11 @@ namespace dashboard_api.Services
                 covidItem.NewDeaths = GetIntForNullAndFloat(dataTable, i, "new_deaths");
                 covidItem.TotalCases = GetIntForNullAndFloat(dataTable, i, "total_cases");
                 covidItem.TotalDeaths = GetIntForNullAndFloat(dataTable, i, "total_deaths");
+                covidItem.TotalCasesPerMilion = GetFloatForNull(dataTable, i, "total_cases_per_million");
+                covidItem.TotalDeathsPerMilion = GetFloatForNull(dataTable, i, "total_deaths_per_million");
+                covidItem.NewCasesPerMilion = GetFloatForNull(dataTable, i, "new_cases_per_million");
+                covidItem.NewDeathsPerMilion = GetFloatForNull(dataTable, i, "new_deaths_per_million");
+                covidItem.StringencyIndex = GetFloatForNull(dataTable, i, "stringency_index");
                 items.Add(covidItem);
             }
             await _context.BulkInsertAsync(items);
@@ -71,6 +76,25 @@ namespace dashboard_api.Services
                 {
                     return -1;
                 }
+            }
+
+        }
+
+        private double GetFloatForNull(DataTable dt, int i, string title)
+        {
+            var data = dt.Rows[i][title];
+
+            if (data.Equals(DBNull.Value))
+                return -1;
+
+            try
+            {
+                var doubleOutput = (Convert.ToDouble(data));
+                return doubleOutput;
+            }
+            catch
+            {
+                return -1;
             }
 
         }

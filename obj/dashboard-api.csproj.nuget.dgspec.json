@@ -13,9 +13,6 @@
         "packagesPath": "C:\\Users\\Farhad\\.nuget\\packages\\",
         "outputPath": "E:\\Folders\\Educational\\NTNU\\Courses\\Data Processing\\Final Project\\Vizualization Tool\\Presentation\\dashboard-api\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
           "C:\\Users\\Farhad\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
@@ -23,9 +20,7 @@
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://www.myget.org/F/openiddict/api/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {

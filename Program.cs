@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
+using Microsoft.Extensions.FileProviders;
 using dashboard_api.Models;
 using dashboard_api.Helpers;
 using dashboard_api.Services;
@@ -11,9 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<CovidContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("CovidDb")));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection")));
 
-var dataTable = CSVHelper.GetDataTable("F:\\DL\\owid-covid-data.csv");
+var dataTable = CSVHelper.GetDataTable("owid-covid-data.csv");
 
 builder.Services.AddScoped<CovidItemService>();
 
@@ -23,10 +24,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
+    options.AddDefaultPolicy(
                       builder =>
                       {
-                          builder.WithOrigins("http://localhost:4200")
+                          builder.WithOrigins("http://localhost:4200", "https://covidanalytics.azurewebsites.net"
+                                                )
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                       });
@@ -51,9 +53,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors();
 
 app.UseHttpsRedirection();
-app.UseCors(MyAllowSpecificOrigins);
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(app.Environment.ContentRootPath, "MyStaticFiles")),
+    RequestPath = "/StaticFiles"
+});
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
