@@ -46,18 +46,29 @@ namespace dashboard_api.Controllers
         {
             var covidItems = await _context.CovidItems
                             .Where(x => x.IsoCode == id.ToUpper())
+                            .OrderBy(x => x.Date)
                             .ToListAsync();
 
             return covidItems;
         }
 
         [HttpGet("latest")]
-        public async Task<ActionResult<IEnumerable<CovidItem>>> GetLatestLocationData()
+        public async Task<ActionResult<IEnumerable<CovidItem>>> GetLatestLocationData(string endDate)
         {
             var covidItems = await _context.CovidItems
                             .GroupBy(a => a.Location)
-                            .Select(g => g.OrderByDescending(x => x.Date).First())
+                            .Select(g => g.FirstOrDefault(x => x.Date == DateTime.Parse(endDate)))
                             .ToListAsync();
+
+            return covidItems;
+        }
+
+        [HttpGet("latestfiltered")]
+        public async Task<ActionResult<IEnumerable<CovidCountry>>> GetLatestLocationDataFiltered(string population, string gdp)
+        {
+            var covidItems = await _context.CovidCountry
+                            .Where(x => x.Population < int.Parse(population)
+                            && x.GDP > int.Parse(gdp)).ToListAsync();
 
             return covidItems;
         }

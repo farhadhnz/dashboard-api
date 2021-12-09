@@ -21,8 +21,36 @@ namespace dashboard_api.Services
             return await _context.CovidItems.AnyAsync();
         }
 
+        private async Task<bool> CheckIfCovidCountryHasData()
+        {
+            return await _context.CovidCountry.AnyAsync();
+        }
+
         public async Task<TimeSpan> AddBulkDataAsync(DataTable dataTable)
         {
+            if (await CheckIfCovidCountryHasData())
+            {
+                return TimeSpan.MinValue;
+            }
+
+            List<CovidCountry> countryItems = new();
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                if (countryItems.Any(x => x.Name == dataTable.Rows[i]["location"].ToString()))
+                    continue;
+
+                var covidItem = new CovidCountry();
+                covidItem.Id = i + 1;
+                covidItem.GDP =  GetFloatForNull(dataTable, i, "gdp_per_capita");
+                covidItem.HumanDevelopmentIndex = GetFloatForNull(dataTable, i, "human_development_index");
+                covidItem.LifeExpectancy = GetFloatForNull(dataTable, i, "life_expectancy");
+                covidItem.Name = dataTable.Rows[i]["location"].ToString();
+                covidItem.Population = GetIntForNullAndFloat(dataTable, i, "population");
+                covidItem.PopulationDensity = GetFloatForNull(dataTable, i, "population_density");
+                countryItems.Add(covidItem);
+            }
+            await _context.BulkInsertAsync(countryItems);
+
             if (await CheckIfDatabaseHasData())
             {
                 return TimeSpan.MinValue;

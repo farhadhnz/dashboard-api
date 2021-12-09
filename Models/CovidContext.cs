@@ -10,5 +10,6 @@ namespace dashboard_api.Models
         }
 
         public DbSet<CovidItem> CovidItems { get; set; } = null!;
+        public DbSet<CovidCountry> CovidCountry { get; set; } = null!;
     }
 }
