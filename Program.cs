@@ -27,8 +27,11 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
                       builder =>
                       {
-                          builder.WithOrigins("http://localhost:4200", "https://covidanalytics.azurewebsites.net"
+                          builder.WithOrigins("http://localhost:4200", "https://covidanalytics.azurewebsites.net",
+                          "http://farhadh.000webhostapp.com",
+                          "https://farhadh.000webhostapp.com"
                                                 )
+                          .AllowAnyOrigin()
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                       });
@@ -55,7 +58,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors();
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseStaticFiles(new StaticFileOptions
 {
